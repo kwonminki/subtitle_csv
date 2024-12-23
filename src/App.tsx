@@ -1,5 +1,5 @@
 import React from 'react';
-import YoutubePlayer from './pages/YoutubePlayer';
+import YoutubePlayer from './components/YoutubePlayer';
 
 function App() {
   return (
