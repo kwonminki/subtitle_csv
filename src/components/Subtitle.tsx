@@ -121,9 +121,7 @@ const Subtitle = ({ id, content, setData, player }: Props) => {
     }
 
     const setToContent = () => {
-            setData((prev) =>
-            prev.map((item, i) => i === id ? clip : item)
-        )
+        setData((prev) => prev.map((item, i) => i === id ? clip : item))
         setIsModify(!isModify);
     }
 

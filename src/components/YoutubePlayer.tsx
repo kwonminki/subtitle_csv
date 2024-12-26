@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Papa from 'papaparse'
 import Subtitle from "./Subtitle";
-import { Content } from "../types/types";
+import { Content, defaultContent } from "../types/types";
 
 const YoutubePlayer: React.FC = () => {
   const playerRef = useRef<HTMLDivElement>(null);
@@ -113,7 +113,7 @@ const YoutubePlayer: React.FC = () => {
 
   const fileReader = (file: File) => {
     const reader = new FileReader();
-
+    setData([])
     reader.onload = (event) => {
       const text = event.target?.result as string;
       const parseData = Papa.parse(text, {
@@ -169,6 +169,13 @@ const YoutubePlayer: React.FC = () => {
     )
   }
 
+  const addClip = () => {
+    const clip: Content = {
+      ...defaultContent,
+    }
+    setData((prevData) => [...prevData, clip]);
+  }
+
   return (
       <div>
         {/* sample video id : crLbUTFh2oQ */}
@@ -180,50 +187,12 @@ const YoutubePlayer: React.FC = () => {
       
         <button onClick={exportCSV}>내보내기</button>
       <input type="file" accept=".csv" onChange={fileHandler} />
-      {/* <table>
-        <thead>
-          <tr>
-            <th>시작시간</th>
-            <th>종료시간</th>
-            <th>자막</th>
-            <th>옵션</th>
-          </tr>
-        </thead>
-        <tbody> */}
       {data.map((item, index) => (
             <>
               <Subtitle key={index} id={index} content={item} setData={setData} player={player}/>
             </>
-            // <tr key={index}>
-            //   <td>
-            //     <input key={index} type="text" value={item.startTime} />
-            //     <button onClick={() => changeTime(index, item.startTime, -0.1, true)}>-0.1</button>
-            //     <button onClick={() => changeTime(index, item.startTime, -0.01, true)}>-0.01</button>
-            //     <button onClick={() => changeTime(index, item.startTime, +0.01, true)}>+0.01</button>
-            //     <button onClick={() => changeTime(index, item.startTime, +0.1, true)}>+0.1</button>
-            //   </td>
-            //   <td>
-            //     <input type="text" value={item.endTime}/>
-            //     <button onClick={() => changeTime(index, item.endTime, -0.1, false)}>-0.1</button>
-            //     <button onClick={() => changeTime(index, item.endTime, -0.01, false)}>-0.01</button>
-            //     <button onClick={() => changeTime(index, item.endTime, +0.01, false)}>+0.01</button>
-            //     <button onClick={() => changeTime(index, item.endTime, +0.1, false)}>+0.1</button>
-            //   </td>
-            //   <td>
-            //     {item.korSub}
-            //   </td>
-            //   <td>
-            //     <button onClick={() => {
-            //       player?.setPlaybackRate(1)
-            //     }}>1배속</button>
-            //     <button onClick={() => {
-            //       player?.setPlaybackRate(2)
-            //     }}>2배속</button>
-            //   </td>
-            // </tr>
-          ))}
-        {/* </tbody>
-      </table> */}
+      ))}
+      <button onClick={addClip}>자막추가</button>
       </div>
     );
 }

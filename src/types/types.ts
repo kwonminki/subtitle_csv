@@ -3,5 +3,11 @@ export interface Content{
   startTime: string,
   endTime: string,
   korSub: string,
-  setContent?: React.Dispatch<React.SetStateAction<Content>>
+}
+
+export const defaultContent: Content = {
+  speakerName : '',
+  startTime : '',
+  endTime : '',
+  korSub : ''
 }
