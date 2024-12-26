@@ -1,12 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Papa from 'papaparse'
-
-interface Clip{
-  speakerName: string,
-  startTime: string,
-  endTime: string,
-  korSub: string,
-}
+import Subtitle from "./Subtitle";
+import { Content } from "../types/types";
 
 const YoutubePlayer: React.FC = () => {
   const playerRef = useRef<HTMLDivElement>(null);
@@ -94,7 +89,6 @@ const YoutubePlayer: React.FC = () => {
       const minutes = Math.floor((time - hours * 3600) / 60);
       const seconds = Math.floor((time - hours * 3600 - minutes * 60));
       const miliseconds = Math.round((time - hours * 3600 - minutes * 60 - seconds) * 100);
-      console.log(miliseconds);
       return `${hours >= 10 ? hours : `0${hours}`}:${minutes >= 10 ? minutes: `0${minutes}`}:${seconds >= 10 ? seconds : `0${seconds}`}:${miliseconds >= 10 ? miliseconds : `0${miliseconds}`}`
     } else {
       return '';
@@ -105,7 +99,7 @@ const YoutubePlayer: React.FC = () => {
   // csv파일 업로드 및 분석 코드
   
   const [file, setFile] = useState<File | null>(null);
-  const [data, setData] = useState < Clip[]>([]);
+  const [data, setData] = useState < Content[]>([]);
 
   const fileHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -126,9 +120,9 @@ const YoutubePlayer: React.FC = () => {
         skipEmptyLines: true,
       })
       const rows = parseData.data as string[][];
-      const arr: Clip[] = [];
+      const arr: Content[] = [];
       for (let i = 1; i < rows.length; i++){
-        const content: Clip = {
+        const content: Content = {
           speakerName : rows[i][0],
           startTime : rows[i][1],
           endTime : rows[i][2],
@@ -148,7 +142,7 @@ const YoutubePlayer: React.FC = () => {
     const csvRows = [];
     csvRows.push(headers.join(','));
     data.forEach((row) => {
-      const values = headers.map((header) => row[header as keyof Clip]);
+      const values = headers.map((header) => row[header as keyof Content]);
       csvRows.push(values.join(','));
     });
 
@@ -169,7 +163,7 @@ const YoutubePlayer: React.FC = () => {
 
   const changeTime = (index: number, time: string, change: number, isStart: boolean) => {
     const newTime = numberToHms(hmsToNumber(time) + change);
-    console.log(`${newTime} change ${change}`);
+    // console.log(`${newTime} change ${change}`);
     setData((prevData) => 
       prevData.map((item, i) => i === index ? isStart ?{ ...item, startTime: newTime } : {...item, endTime: newTime} : item)
     )
@@ -186,7 +180,7 @@ const YoutubePlayer: React.FC = () => {
       
         <button onClick={exportCSV}>내보내기</button>
       <input type="file" accept=".csv" onChange={fileHandler} />
-      <table>
+      {/* <table>
         <thead>
           <tr>
             <th>시작시간</th>
@@ -195,38 +189,41 @@ const YoutubePlayer: React.FC = () => {
             <th>옵션</th>
           </tr>
         </thead>
-        <tbody>
-          {data.map((item, index) => (
-            <tr key={index}>
-              <td>
-                <input key={index} type="text" value={item.startTime} />
-                <button onClick={() => changeTime(index, item.startTime, -0.1, true)}>-0.1</button>
-                <button onClick={() => changeTime(index, item.startTime, -0.01, true)}>-0.01</button>
-                <button onClick={() => changeTime(index, item.startTime, +0.01, true)}>+0.01</button>
-                <button onClick={() => changeTime(index, item.startTime, +0.1, true)}>+0.1</button>
-              </td>
-              <td>
-                <input type="text" value={item.endTime}/>
-                <button onClick={() => changeTime(index, item.endTime, -0.1, false)}>-0.1</button>
-                <button onClick={() => changeTime(index, item.endTime, -0.01, false)}>-0.01</button>
-                <button onClick={() => changeTime(index, item.endTime, +0.01, false)}>+0.01</button>
-                <button onClick={() => changeTime(index, item.endTime, +0.1, false)}>+0.1</button>
-              </td>
-              <td>
-                {item.korSub}
-              </td>
-              <td>
-                <button onClick={() => {
-                  player?.setPlaybackRate(1)
-                }}>1배속</button>
-                <button onClick={() => {
-                  player?.setPlaybackRate(2)
-                }}>2배속</button>
-              </td>
-            </tr>
+        <tbody> */}
+      {data.map((item, index) => (
+            <>
+              <Subtitle key={index} id={index} content={item} setData={setData} player={player}/>
+            </>
+            // <tr key={index}>
+            //   <td>
+            //     <input key={index} type="text" value={item.startTime} />
+            //     <button onClick={() => changeTime(index, item.startTime, -0.1, true)}>-0.1</button>
+            //     <button onClick={() => changeTime(index, item.startTime, -0.01, true)}>-0.01</button>
+            //     <button onClick={() => changeTime(index, item.startTime, +0.01, true)}>+0.01</button>
+            //     <button onClick={() => changeTime(index, item.startTime, +0.1, true)}>+0.1</button>
+            //   </td>
+            //   <td>
+            //     <input type="text" value={item.endTime}/>
+            //     <button onClick={() => changeTime(index, item.endTime, -0.1, false)}>-0.1</button>
+            //     <button onClick={() => changeTime(index, item.endTime, -0.01, false)}>-0.01</button>
+            //     <button onClick={() => changeTime(index, item.endTime, +0.01, false)}>+0.01</button>
+            //     <button onClick={() => changeTime(index, item.endTime, +0.1, false)}>+0.1</button>
+            //   </td>
+            //   <td>
+            //     {item.korSub}
+            //   </td>
+            //   <td>
+            //     <button onClick={() => {
+            //       player?.setPlaybackRate(1)
+            //     }}>1배속</button>
+            //     <button onClick={() => {
+            //       player?.setPlaybackRate(2)
+            //     }}>2배속</button>
+            //   </td>
+            // </tr>
           ))}
-        </tbody>
-      </table>
+        {/* </tbody>
+      </table> */}
       </div>
     );
 }
