@@ -1,13 +1,6 @@
-export interface Content{
+export interface Clip{
   speakerName: string,
   startTime: string,
   endTime: string,
   korSub: string,
-}
-
-export const defaultContent: Content = {
-  speakerName : '',
-  startTime : '',
-  endTime : '',
-  korSub : ''
 }
