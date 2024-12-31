@@ -1,0 +1,13 @@
+.PlayerView{
+    display: flex;
+    margin: 5px;
+}
+
+.YoutubeView{
+    display: flex;
+    flex-direction: column;
+}
+
+.SubtitleView{
+
+}

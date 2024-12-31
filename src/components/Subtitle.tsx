@@ -128,7 +128,7 @@ const Subtitle = ({ id, content, data, setData, player }: Props) => {
                 content.startTime = value;
                 break;
             case "endTime":
-                content.startTime = value;
+                content.endTime = value;
                 break;
             
         }

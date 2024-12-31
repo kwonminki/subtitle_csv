@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Papa from 'papaparse'
 import Subtitle from "./Subtitle";
 import { Clip } from "../types/types";
+import "../styles/style.css"
 
 const YoutubePlayer: React.FC = () => {
   const playerRef = useRef<HTMLDivElement>(null);
@@ -129,24 +130,29 @@ const YoutubePlayer: React.FC = () => {
   }
 
   return (
-      <div>
-        {/* sample video id : crLbUTFh2oQ */}
-      <div ref={playerRef} />
+      <div className="PlayerView">
+      {/* sample video id : crLbUTFh2oQ */}
+        <div className="YoutubeView">
+          <div ref={playerRef} />
 
-      <input type="text" value={inputValue} onChange={inputValueHandler} />
-      <button onClick={() => {
-        setVideoId(inputValue) 
-      }}>setVideoId</button>
+          <div>
+            <input type="text" value={inputValue} onChange={inputValueHandler} />
+            <button onClick={() => {
+              setVideoId(inputValue) 
+            }}>setVideoId</button>
+            {data.length > 0 && <button onClick={exportCSV}>내보내기</button>}
+          </div>
 
-      {data.length > 0 && <button onClick={exportCSV}>내보내기</button>}
-      <input type="file" accept=".csv" onChange={fileHandler} />
-      
-      {data.map((item, index) => (
-        <>
-          <Subtitle key={index} id={index} content={item} data={data} setData={setData} player={player}/>
-        </>
-      ))}
-      <button onClick={addClip}>자막추가</button>
+          <input type="file" accept=".csv" onChange={fileHandler} />
+        </div>
+        <div className="SubtitleView">
+          {data.map((item, index) => (
+            <>
+              <Subtitle key={index} id={index} content={item} data={data} setData={setData} player={player}/>
+            </>
+          ))}
+          <button onClick={addClip}>자막추가</button>
+        </div>
 
       </div>
     );
